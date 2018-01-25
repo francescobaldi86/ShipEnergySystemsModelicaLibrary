@@ -1,0 +1,161 @@
+within ShipEnergySystems;
+
+package Examples
+
+
+  model HullAndpropellerTest
+    DCmotor electricMotor annotation(
+      Placement(visible = true, transformation(origin = {-12, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Sources.Ramp InputSignal(duration = 200, height = 1000) annotation(
+      Placement(visible = true, transformation(origin = {-64, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Mechanics.Translational.Components.Fixed fixed1 annotation(
+      Placement(visible = true, transformation(origin = {86, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    ShipEnergySystems.Propeller.FixedEfficiency Propeller(K_Q = 0.035, K_T = 0.25, diameter = 2, useSupportR = false, useSupportT = false) annotation(
+      Placement(visible = true, transformation(origin = {26, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ ShipHull.FixedC Hull(C1 = 100)  annotation(
+      Placement(visible = true, transformation(origin = {66, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  equation
+    connect(Hull.flange_water, fixed1.flange) annotation(
+      Line(points = {{76, 0}, {86, 0}, {86, -54}, {86, -54}}, color = {0, 127, 0}));
+    connect(Propeller.flangeT, Hull.flange_prop) annotation(
+      Line(points = {{36, 0}, {56, 0}, {56, 0}, {56, 0}}, color = {0, 127, 0}));
+    connect(Propeller.flangeR, electricMotor.flange_a) annotation(
+      Line(points = {{16, 0}, {-4, 0}, {-4, 0}, {-4, 0}}));
+    connect(InputSignal.y, electricMotor.u) annotation(
+      Line(points = {{-52, 0}, {-22, 0}, {-22, 0}, {-22, 0}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "3.2.2")));
+  end HullAndpropellerTest;
+
+	
+	
+model baseTest
+  DCmotor electricMotor annotation(
+    Placement(visible = true, transformation(origin = {-12, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Ramp InputSignal annotation(
+    Placement(visible = true, transformation(origin = {-64, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ Modelica.Mechanics.Rotational.Components.IdealRollingWheel idealRollingWheel1 annotation(
+      Placement(visible = true, transformation(origin = {30, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
+equation
+    connect(electricMotor.flange_a, idealRollingWheel1.flangeR) annotation(
+      Line(points = {{-4, 0}, {20, 0}, {20, 0}, {20, 0}}));
+    connect(InputSignal.y, electricMotor.u) annotation(
+      Line(points = {{-52, 0}, {-22, 0}, {-22, 0}, {-22, 0}}, color = {0, 0, 127}));
+    annotation(
+    uses(Modelica(version = "3.2.2")));
+end baseTest;
+
+  model propellerTest
+    DCmotor electricMotor annotation(
+      Placement(visible = true, transformation(origin = {-12, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Sources.Ramp InputSignal(duration = 200, height = 1000)  annotation(
+      Placement(visible = true, transformation(origin = {-64, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Mechanics.Translational.Components.Mass Inertia(m = 1000)  annotation(
+      Placement(visible = true, transformation(origin = {58, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Mechanics.Translational.Components.Fixed fixed1 annotation(
+      Placement(visible = true, transformation(origin = {78, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ ShipEnergySystems.Propeller.FixedEfficiency Propeller( K_Q=0.035, K_T=0.25,diameter = 2, useSupportR = false, useSupportT = false)  annotation(
+      Placement(visible = true, transformation(origin = {26, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ Modelica.Mechanics.Translational.Components.Damper damper1(d = 1000)  annotation(
+      Placement(visible = true, transformation(origin = {78, -22}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+  equation
+    connect(damper1.flange_b, fixed1.flange) annotation(
+      Line(points = {{78, -32}, {78, -32}, {78, -54}, {78, -54}}, color = {0, 127, 0}));
+    connect(Inertia.flange_b, damper1.flange_a) annotation(
+      Line(points = {{68, 0}, {78, 0}, {78, -12}, {78, -12}}, color = {0, 127, 0}));
+    connect(Inertia.flange_a, Propeller.flangeT) annotation(
+      Line(points = {{48, 0}, {36, 0}}, color = {0, 127, 0}));
+    connect(Propeller.flangeR, electricMotor.flange_a) annotation(
+      Line(points = {{16, 0}, {-4, 0}, {-4, 0}, {-4, 0}}));
+    connect(InputSignal.y, electricMotor.u) annotation(
+      Line(points = {{-52, 0}, {-22, 0}, {-22, 0}, {-22, 0}}, color = {0, 0, 127}));
+    annotation(
+      uses(Modelica(version = "3.2.2")));
+  end propellerTest;
+  
+  
+model SpeedControlTest
+  DCmotor electricMotor annotation(
+    Placement(visible = true, transformation(origin = {-12, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Sources.Ramp InputSignal(duration = 200, height = 6) annotation(
+    Placement(visible = true, transformation(origin = {-86, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.Translational.Components.Fixed fixed1 annotation(
+    Placement(visible = true, transformation(origin = {86, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  ShipEnergySystems.Propeller.FixedEfficiency Propeller(K_Q = 0.035, K_T = 0.25, diameter = 2, useSupportR = false, useSupportT = false) annotation(
+    Placement(visible = true, transformation(origin = {26, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ShipHull.FixedC Hull(C1 = 100)  annotation(
+    Placement(visible = true, transformation(origin = {66, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.Translational.Sensors.SpeedSensor speedSensor1 annotation(
+      Placement(visible = true, transformation(origin = {32, -42}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PID PID(Ti = 10, k = 1000)  annotation(
+      Placement(visible = true, transformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Feedback feedback1 annotation(
+      Placement(visible = true, transformation(origin = {-40, -46}, extent = {{10, -10}, {-10, 10}}, rotation = 180)));
+  Modelica.Blocks.Math.Gain gain1(k = -1)  annotation(
+      Placement(visible = true, transformation(origin = {2, -42}, extent = {{6, -6}, {-6, 6}}, rotation = 0)));
+
+equation
+    connect(gain1.y, feedback1.u2) annotation(
+      Line(points = {{-4, -42}, {-14, -42}, {-14, -28}, {-40, -28}, {-40, -38}, {-40, -38}}, color = {0, 0, 127}));
+    connect(speedSensor1.v, gain1.u) annotation(
+      Line(points = {{20, -42}, {10, -42}, {10, -42}, {10, -42}, {10, -42}}, color = {0, 0, 127}));
+    connect(PID.y, electricMotor.u) annotation(
+      Line(points = {{-40, 0}, {-22, 0}, {-22, 0}, {-22, 0}}, color = {0, 0, 127}));
+    connect(feedback1.y, PID.u) annotation(
+      Line(points = {{-30, -46}, {-26, -46}, {-26, -16}, {-80, -16}, {-80, 0}, {-64, 0}, {-64, 0}}, color = {0, 0, 127}));
+    connect(InputSignal.y, feedback1.u1) annotation(
+      Line(points = {{-74, -46}, {-48, -46}, {-48, -46}, {-48, -46}}, color = {0, 0, 127}));
+    connect(speedSensor1.flange, Hull.flange_prop) annotation(
+      Line(points = {{42, -42}, {56, -42}, {56, 0}, {56, 0}}, color = {0, 127, 0}));
+  connect(Hull.flange_water, fixed1.flange) annotation(
+    Line(points = {{76, 0}, {86, 0}, {86, -54}, {86, -54}}, color = {0, 127, 0}));
+  connect(Propeller.flangeT, Hull.flange_prop) annotation(
+    Line(points = {{36, 0}, {56, 0}, {56, 0}, {56, 0}}, color = {0, 127, 0}));
+  connect(Propeller.flangeR, electricMotor.flange_a) annotation(
+    Line(points = {{16, 0}, {-4, 0}, {-4, 0}, {-4, 0}}));
+  annotation(
+    uses(Modelica(version = "3.2.2")));
+end SpeedControlTest;
+
+
+
+model EngineControlTest
+  Modelica.Blocks.Sources.Ramp InputSignal(duration = 200, height = 6) annotation(
+    Placement(visible = true, transformation(origin = {-86, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.Translational.Components.Fixed fixed1 annotation(
+    Placement(visible = true, transformation(origin = {86, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  ShipEnergySystems.Propeller.FixedEfficiency Propeller(K_Q = 0.035, K_T = 0.25, diameter = 2, useSupportR = false, useSupportT = false) annotation(
+    Placement(visible = true, transformation(origin = {26, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ShipHull.FixedC Hull(C1 = 100)  annotation(
+    Placement(visible = true, transformation(origin = {66, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.Translational.Sensors.SpeedSensor speedSensor1 annotation(
+      Placement(visible = true, transformation(origin = {32, -42}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+  Modelica.Blocks.Continuous.PID PID(k = 0.5)  annotation(
+      Placement(visible = true, transformation(origin = {-52, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Blocks.Math.Feedback feedback1 annotation(
+      Placement(visible = true, transformation(origin = {-40, -46}, extent = {{10, -10}, {-10, 10}}, rotation = 180)));
+  Modelica.Blocks.Math.Gain gain1(k = 1)  annotation(
+      Placement(visible = true, transformation(origin = {2, -42}, extent = {{6, -6}, {-6, 6}}, rotation = 0)));
+
+equation
+    connect(gain1.y, feedback1.u2) annotation(
+      Line(points = {{-4, -42}, {-14, -42}, {-14, -28}, {-40, -28}, {-40, -38}, {-40, -38}}, color = {0, 0, 127}));
+    connect(speedSensor1.v, gain1.u) annotation(
+      Line(points = {{20, -42}, {10, -42}, {10, -42}, {10, -42}, {10, -42}}, color = {0, 0, 127}));
+    connect(feedback1.y, PID.u) annotation(
+      Line(points = {{-30, -46}, {-26, -46}, {-26, -16}, {-80, -16}, {-80, 0}, {-64, 0}, {-64, 0}}, color = {0, 0, 127}));
+    connect(InputSignal.y, feedback1.u1) annotation(
+      Line(points = {{-74, -46}, {-48, -46}, {-48, -46}, {-48, -46}}, color = {0, 0, 127}));
+    connect(speedSensor1.flange, Hull.flange_prop) annotation(
+      Line(points = {{42, -42}, {56, -42}, {56, 0}, {56, 0}}, color = {0, 127, 0}));
+    connect(Hull.flange_water, fixed1.flange) annotation(
+      Line(points = {{76, 0}, {86, 0}, {86, -54}, {86, -54}}, color = {0, 127, 0}));
+    connect(Propeller.flangeT, Hull.flange_prop) annotation(
+      Line(points = {{36, 0}, {56, 0}, {56, 0}, {56, 0}}, color = {0, 127, 0}));
+    annotation(
+    uses(Modelica(version = "3.2.2")));
+end EngineControlTest;
+
+
+end Examples;
