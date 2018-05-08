@@ -1,4 +1,4 @@
-within ShipEnergySystems;
+within ShipEnergySystemsModelicaLibrary;
 
 package ElectricMachinery
 

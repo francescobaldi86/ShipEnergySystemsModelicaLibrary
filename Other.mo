@@ -1,4 +1,4 @@
-within ShipEnergySystems;
+within ShipEnergySystemsModelicaLibrary;
 
 package Other
 
@@ -27,7 +27,7 @@ connector FlangeCdot_B "B-type flange connector for Cdot-type heat source"
 end FlangeCdot_B;
 
 model inputForFlangeCdot "This block takes four separate inputs and merges them in the output information required by the flange of Cdot type"
-  ShipEnergySystems.Other.FlangeCdot_A OutFlow_sf annotation (Placement(transformation(extent={{110,50},{90,70}})));
+  ShipEnergySystemsModelicaLibrary.Other.FlangeCdot_A OutFlow_sf annotation (Placement(transformation(extent={{110,50},{90,70}})));
   Modelica.Blocks.Interfaces.RealInput u1[1]
     "Connector of Real input signals 1" annotation (Placement(transformation(
           extent={{-140,70},{-100,110}})));

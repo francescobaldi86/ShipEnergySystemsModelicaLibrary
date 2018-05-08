@@ -1,4 +1,4 @@
-within ShipEnergySystems;
+within ShipEnergySystemsModelicaLibrary;
 
 package Propeller "Package for propeller models"
   // Importing some useful packages //

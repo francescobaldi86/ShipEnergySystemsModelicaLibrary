@@ -1,4 +1,4 @@
-package ShipEnergySystems "This is the main package of the ShipEnergySystems library"
+package ShipEnergySystemsModelicaLibrary "This is the main package of the ShipEnergySystems library"
   extends Modelica.Icons.Package;
   //This is meant to be an open Modelica Library to be used with the standard OpenModelica distribution//
   //The following libraries should be available for the ShipEnergySystems library to work effectively: //
@@ -15,4 +15,4 @@ package ShipEnergySystems "This is the main package of the ShipEnergySystems lib
 
   annotation(
     uses(Modelica(version = "3.2.2")));
-end ShipEnergySystems;
+end ShipEnergySystemsModelicaLibrary;

@@ -1,4 +1,4 @@
-within ShipEnergySystems;
+within ShipEnergySystemsModelicaLibrary;
 
 package ShipHull "Package for ship hull models"
   // Importing some useful packages //
